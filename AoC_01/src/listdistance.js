@@ -17,7 +17,7 @@ function add(accumulator, a){
 }
 
 export const computeTotalDistance = (data) => {
-    console.log("-------- START EXERCICE 1 -------");
+    console.log("-------- START EXERCICE 1 Part 1-------");
     const lines = data.trim().split("\n");
     console.log(lines);
     const {column1,column2} = getTables(lines);
@@ -33,4 +33,23 @@ export const computeTotalDistance = (data) => {
     return sum;
 }
 
+function similarity(x, arr){
+    const initialValue = 0;
+    const sim = arr.reduce((accumulator, currentValue) => {
+        return currentValue===x ? accumulator + 1: accumulator }, initialValue,
+    );
+    return sim;
+}
 
+export const computeSimilarity = (data) => {
+    console.log("-------- START EXERCICE 1 Part 2-------");
+    const lines = data.trim().split("\n");
+    console.log(lines);
+    const {column1,column2} = getTables(lines);
+    const zipped = column1.map((x) => x*similarity(x,column2));
+    console.log(zipped);
+    const similaritySum = zipped.reduce(add, 0);
+    console.log(similaritySum);
+
+    return similaritySum
+}
