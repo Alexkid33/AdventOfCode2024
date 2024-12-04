@@ -36,9 +36,6 @@ const findDiagonal = (array, nbRow,nbCol) => {
 const findDiagonal2 = (array, nbRow,nbCol) => {
     let count = 0;
     for (let i = 0; i < nbRow-2; i++) {
-        const isValid1MAS = false;
-        const isValid1SAM = false;
-        const isValid2 = false;
         for (let j = 0; j < nbCol-2; j++) {
             const word1 = array[i][j]+array[i+1][j+1]+array[i+2][j+2];
             const word2 = array[i+2][j]+array[i+1][j+1]+array[i][j+2];
@@ -84,7 +81,7 @@ export const computeXmas = (data) => {
     return result;
 }
 export const computeXmas2 = (data) => {
-    console.log("-------- START EXERCICE 4 Part 1-------");
+    console.log("-------- START EXERCICE 4 Part 2-------");
     const lines = data.trim().split("\n");
     //console.log(lines);
     const charArray = [];
