@@ -1,8 +1,8 @@
-import {computeSum} from './utils.js'
+import {computeSum, computeSum2} from './utils.js'
 
 const fileInput = document.getElementById('fileInput');
 const result = document.getElementById('result');
-//const result2 = document.getElementById('result2');
+const result2 = document.getElementById('result2');
 
 fileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
@@ -11,6 +11,7 @@ fileInput.addEventListener('change', (event) => {
         reader.onload = function(e) {
           const content = e.target.result;
           result.textContent = computeSum(content);
+          result2.textContent = computeSum2(content);
         };
         reader.readAsText(file); 
     }
