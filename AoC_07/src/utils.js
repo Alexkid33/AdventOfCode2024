@@ -1,7 +1,8 @@
 const add = (a,b) => a+b;
 const mult = (a,b) => a*b;
+const concat = (a,b) => Number(a + "" + b);
 
-const operations = [add, mult];
+const operations = [add, mult,concat];
 function generateCombinations(symbols, length) {
     const result = [];
 
@@ -73,7 +74,7 @@ export const calibrationResult = (data) => {
         }
     }
 
-    // 2314935962622
+    // 
     return result;
 
 }

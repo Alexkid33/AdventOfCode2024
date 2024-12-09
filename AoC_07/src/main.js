@@ -11,7 +11,6 @@ fileInput.addEventListener('change', (event) => {
         reader.onload = function(e) {
           const content = e.target.result;
           result.textContent = calibrationResult(content);
-          //result2.textContent = computeXmas2(content);
         };
         reader.readAsText(file); 
     }
