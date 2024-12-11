@@ -10,8 +10,7 @@ function findFrequencies(antenna, antennaId){
         }
     });
 }
-function computePosition(currPos,nextPos, isUp){
-    const diff = Math.abs(currPos-nextPos);
+function computePosition(currPos,nextPos,diff, isUp){
     if(isUp){
         if(currPos > nextPos){
             return currPos+diff;
@@ -36,30 +35,36 @@ function processAntenna({antennaId, position}, otherAntennas){
     otherAntennas.forEach((item) => {
         const {antennaId:nextAntennaId, position:nextPosition} = item;
         const diffId = nextAntennaId-antennaId;
+        const diffPos = Math.abs(position-nextPosition);
 
-        // Set upper Antenna antinode
-        if((antennaId-diffId) >= 0){
-            const upAntennaForAntinode = antennas[(antennaId-diffId)];
-            const pos = computePosition(position,nextPosition, true)
-            if(pos >=0 && pos < upAntennaForAntinode.length){
-                if(antennas[(antennaId-diffId)][pos] !== "#"){
-                    antennas[(antennaId-diffId)][pos] = "#";
-                    count += 1;                    
+        // Set upper Antennas antinodes
+        let upPos = computePosition(position,nextPosition,diffPos, true)
+        for (let upId = antennaId-diffId; upId >= 0; upId-=Math.abs(diffId)) {
+            
+            const upAntennaForAntinode = antennas[upId];
+            if(upPos >=0 && upPos < upAntennaForAntinode.length){
+                if(antennas[upId][upPos] !== "#"){
+                    antennas[upId][upPos] = "#";
+                    //count += 1;                    
                 }
 
             }
+            upPos = computePosition(upPos,position,diffPos, true)
+    
         }
 
         // Set lower Antenna antinode
-        if((nextAntennaId+diffId) < antennas.length){
-            const lowAntennaForAntinode = antennas[nextAntennaId+diffId];
-            const pos = computePosition(position,nextPosition, false)
-            if(pos >=0 && pos < lowAntennaForAntinode.length){
-                if(antennas[nextAntennaId+diffId][pos] !== "#"){
-                    antennas[nextAntennaId+diffId][pos] = "#";
-                    count += 1;                    
+        let lowPos = computePosition(position,nextPosition,diffPos, false)
+        for (let lowId = nextAntennaId+diffId; lowId < antennas.length; lowId+=Math.abs(diffId)) {
+            const lowAntennaForAntinode = antennas[lowId];
+            if(lowPos >=0 && lowPos < lowAntennaForAntinode.length){
+                if(antennas[lowId][lowPos] !== "#"){
+                    antennas[lowId][lowPos] = "#";
+                    //count += 1;                    
                 }
             }
+            lowPos = computePosition(nextPosition,lowPos,diffPos, false)
+    
         }       
         
     })
@@ -97,6 +102,13 @@ export const antinodesCompute = (data) => {
 
     frequencyMap.forEach((value, key) => createAntinodes(key, value))
     console.log("new Antenna: ", antennas);
+    antennas.forEach(row => {
+        row.forEach(cell => {
+            if (cell !== '.') {
+                count++;
+            }
+        });
+    });
     console.log('count : ',count);
 
 
