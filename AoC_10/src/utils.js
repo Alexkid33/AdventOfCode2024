@@ -1,8 +1,6 @@
-
-const topoArray = [];
-
 function findNextHeights(height,pathSet) {
-    console.log('==> findNextHeights:', height)
+    //console.log('==> findNextHeights:', height)
+    let hasNextPath = false;
     const {val, x:xPosid, y:yPosId} = JSON.parse(height);
 
     const nextVal = val+1;
@@ -13,47 +11,52 @@ function findNextHeights(height,pathSet) {
 
     if(nextVal > 0 && nextVal <10){
         if(left && left === nextVal){
-            pathSet.add(JSON.stringify({
+            hasNextPath = true;
+            pathSet.push(JSON.stringify({
                 val:nextVal,
                 x: xPosid-1,
                 y: yPosId
             }))    
         }
         if(right && right === nextVal){
-            pathSet.add(JSON.stringify({
+            hasNextPath = true;
+            pathSet.push(JSON.stringify({
                 val:nextVal,
                 x: xPosid+1,
                 y: yPosId
             })    )
         }
         if(top && top === nextVal){
-            pathSet.add(JSON.stringify({
+            hasNextPath = true;
+            pathSet.push(JSON.stringify({
                 val:nextVal,
                 x: xPosid,
                 y: yPosId-1
             })    )
         }
         if(bottom && bottom === nextVal){
-            pathSet.add(JSON.stringify({
+            hasNextPath = true;
+            pathSet.push(JSON.stringify({
                 val:nextVal,
                 x: xPosid,
                 y: yPosId+1
             }) )   
         }
+    }else{
+        hasNextPath = true;
     }
 
-    return pathSet
+    return hasNextPath;
 
 }
 
-function findNeighbors(path) {
-    console.log('==> findNeighbors')
-    const lastHeights = path.slice(-1)[0]
-    const pathSet = new Set();
-    lastHeights.forEach((height) => {
-        findNextHeights(height,pathSet)        
+function findNeighbors(path,pathId) {
+    const path0 = path[pathId]
+    const pathSet = []
+    path0.forEach((height) => {
+        findNextHeights(height,pathSet)
     })
-    if(pathSet.size === 0){
+    if(pathSet.length === 0){
         return null
     }
     path.push(pathSet)
@@ -65,7 +68,6 @@ function findNeighbors(path) {
 function fillMap(yPosArray, yPosId){
     yPosArray.map((xPos, xPosid) => {
         if(xPos === 0){
-            const count = 0;
             const path = [];
             let initialTrailhead = {
                 val:xPos,
@@ -74,31 +76,39 @@ function fillMap(yPosArray, yPosId){
             }
 
             console.log('initialTrailhead:',initialTrailhead)
-            const initSet = new Set();
-            initSet.add(JSON.stringify(initialTrailhead))
+            const initSet = [];
+            initSet.push(JSON.stringify(initialTrailhead))
             path.push(initSet);
             let isPathValid = true;
+            let pathId = 0;
             while(isPathValid){
-                if(findNeighbors(path) === null){
+                if(findNeighbors(path,pathId) === null){
                     isPathValid = false;
+                }else{
+                    console.log('path:', path)
+                    pathId++;
                 }
-                console.log('path:', path)
 
             }
             if(path.length === 10){
-                const currentScore = path.slice(-1)[0].size
-                console.log('current Score : ',currentScore)
-                totalCount = totalCount + currentScore;    
+                //part 2
+                let currentNote = path.slice(-1)[0].length
+                console.log('current Note : ',currentNote)
+                totalNote = totalNote + currentNote;
             }
 
         }
 
     });
 }
-let totalCount = 0;
-export const computeSum = (data) => {
-    console.log("-------- START EXERCICE 10 Part 1-------");
 
+const topoArray = [];
+let totalCount = 0;
+let totalNote = 0;
+export const computeSum = (data) => {
+    console.log("-------- START EXERCICE 10 Part 2-------");
+    totalCount = 0;
+    totalNote = 0;
     const lines = data.trim().split("\n");
 
     lines.forEach(line => {
@@ -108,6 +118,7 @@ export const computeSum = (data) => {
     console.log(topoArray);
     topoArray.map((x,i) => fillMap(x,i))
 
-    return totalCount
+    // part 2:
+    return totalNote
 
 }
